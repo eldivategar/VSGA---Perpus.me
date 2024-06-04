@@ -1,0 +1,43 @@
+* {
+    font-family: "Inter", sans-serif;
+}
+
+.logo {
+    max-width: 3.5rem;
+}
+
+.py-7 {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+}
+
+.create-btn {
+    background-color: #FF6C22;
+    color: #FFFFFF;
+}
+
+.create-btn:hover {
+    background-color: #c74b0c;
+    color: #FFFFFF;
+}
+
+.custom-shape-divider-bottom-1717508694 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1717508694 svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 10em;
+}
+
+.custom-shape-divider-bottom-1717508694 .shape-fill {
+    fill: #FFFFFF;
+}
