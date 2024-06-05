@@ -1,10 +1,10 @@
+// DELETE TRANSACTION
 function deleteTransaction(transactionId) {
   if (confirm("Apakah Anda yakin ingin menghapus transaksi ini?")) {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "form/delete.php", true);
+    xhr.open("POST", "../transactions/delete.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function () {
-      console.log(xhr.responseText);
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           alert("Transaksi berhasil dihapus.");
