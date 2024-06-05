@@ -2,3 +2,11 @@ form
 vendor
 composer.json
 composer.lock
+
+# Ignore all files in the assets/img/ directory
+assets/img/*
+
+# Kecuali file berikut:
+!assets/img/book.svg
+!assets/img/perpus.me.ico
+!assets/img/perpus.me.png
