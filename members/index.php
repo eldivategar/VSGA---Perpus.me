@@ -7,7 +7,7 @@
     <title>VSGA - Perpus.me</title>
 
     <!-- Site Icon -->
-    <link rel="icon" href="assets/img/perpus.me.ico" type="image/x-icon">
+    <link rel="icon" href="../assets/img/perpus.me.ico" type="image/x-icon">
 
     <!-- Bootstrap 5.2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -18,19 +18,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 
     <!-- Custom Style -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body>
     <!-- Top Navbar -->
     <?php
-    include 'component/navbar.php';
+    include '../component/navbar.php';
     ?>
 
     <section class="m-4" style="padding-top: 5rem;">
         <!-- Button trigger modal -->
         <div class="text-end">
-            <button type="button" class="btn create-btn" data-bs-toggle="modal" data-bs-target="#myModal">
+            <button type="button" id="addMemberButton" class="btn create-btn" data-bs-toggle="modal" data-bs-target="#myModal">
                 Tambah Anggota
             </button>
         </div>
@@ -42,9 +42,10 @@
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="myModalLabel">Tambah Anggota Baru</h1>
                     </div>
-                    <form action="form/post.php" method="post">
+                    <form action="post.php" id="memberForm" method="post">
                         <div class="modal-body">
                             <div class="row g-3">
+                                <input type="hidden" name="member_id" id="member_id">
                                 <div class="col-md-6">
                                     <label for="fname" class="form-label">Nama Depan</label>
                                     <input type="text" class="form-control" id="fname" name="fname" required>
@@ -98,30 +99,29 @@
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <?php
-                        $fileJson = file_get_contents('database/perpus.me.json');
-                        $data = json_decode($fileJson, true);
-                        $members = $data['members'];
+                        include '../database/connection.php';
+                        $query = "SELECT * FROM members";
+                        $result = mysqli_query($conn, $query);
 
-                        if (is_array($members)) {
-                            echo "<caption>" . "Total Anggota: " . count($members) . " </caption>";
-                        }
+                        if (mysqli_num_rows($result) > 0) {
+                            $rowCount = mysqli_num_rows($result);
+                            echo "<caption>" . "Total Anggota: " . $rowCount . " </caption>";
                         ?>
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama Lengkap</th>
-                                <th scope="col">Alamat</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Telp</th>
-                                <th scope="col">Jenis Kelamin</th>
-                                <th scope="col">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (is_array($members)) {
-                                foreach ($members as $member => $value) {
-                            ?>
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Nama Lengkap</th>
+                                    <th scope="col">Alamat</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Telp</th>
+                                    <th scope="col">Jenis Kelamin</th>
+                                    <th scope="col">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($result as $member => $value) {
+                                ?>
                                     <tr>
                                         <td scope="row"><?= $member + 1 ?></td>
                                         <td><?= $value['first_name'] . " " . $value['last_name'] ?></td>
@@ -131,16 +131,18 @@
                                         <td><?= $value['gender'] ?></td>
                                         <td>
                                             <div class="d-grid gap-2 d-md-block">
-                                                <button class="btn btn-outline-info" type="button">Edit</button>
-                                                <button class="btn btn-outline-danger" type="button">Hapus</button>
+                                                <button class="btn btn-outline-info edit-btn" type="button" data-bs-toggle="modal" data-bs-target="#myModal" data-member='<?= json_encode($value) ?>'>Edit</button>
+                                                <!-- <button class="btn btn-outline-danger" type="button">Hapus</button> -->
                                             </div>
                                         </td>
                                     </tr>
                             <?php
                                 }
+                            } else {
+                                echo "<caption>" . "Total Anggota: 0" . "</caption>";
                             }
                             ?>
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -151,6 +153,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const myModal = new bootstrap.Modal(document.getElementById('myModal'));
+            const modalTitle = document.getElementById('myModalLabel');
+            const memberForm = document.getElementById('memberForm');
+
+            const addMemberButton = document.getElementById('addMemberButton');
+            addMemberButton.addEventListener('click', () => {
+                modalTitle.textContent = 'Tambah Anggota Baru';
+                memberForm.reset();
+            });
+
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const member = JSON.parse(button.getAttribute('data-member'));
+                    modalTitle.textContent = 'Edit Data Anggota';
+                    memberForm.action = '../members/update.php';
+
+                    document.getElementById('member_id').value = member.member_id;
+                    document.getElementById('fname').value = member.first_name;
+                    document.getElementById('lname').value = member.last_name;
+                    document.getElementById('address').value = member.address;
+                    document.getElementById('email').value = member.email;
+                    document.getElementById('phone').value = member.phone;
+                    console.log(member)
+                    if (member.gender === 'L') {
+                        document.getElementById('l_gender').value = 'L';
+                        document.getElementById('l_gender').checked = true;
+                    } else if (member.gender === 'P') {
+                        document.getElementById('p_gender').value = 'P';
+                        document.getElementById('p_gender').checked = true;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

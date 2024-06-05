@@ -3,11 +3,11 @@
 define ('DATABASE', '../database/perpus.me.json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['bookCode'])) {
+    if (isset($_POST['book_id'])) {
         booksHandler();
-    } elseif (isset($_POST['fname'])) {
+    } elseif (isset($_POST['member_id'])) {
         membersHandler();
-    } elseif (isset($_POST['book'], $_POST['member'], $_POST['date'])) {
+    } elseif (isset($_POST['transaction_id'], $_POST['member'], $_POST['date'])) {
         transactionsHandler();
     }
 }
@@ -29,7 +29,8 @@ function booksHandler()
         $image = $file_upload_name;
 
         $newData = [
-            'bookCode' => $bookCode,
+            'book_id' => uniqid(),
+            'bookCode' => 'book_'.$bookCode,
             'bookTitle' => $bookTitle,
             "year" => $year,
             'author' => $author,
@@ -57,71 +58,6 @@ function booksHandler()
     }
 }
 
-function membersHandler()
-{
-    if (isset($_POST['fname'], $_POST['lname'], $_POST['email'], $_POST['phone'], $_POST['address'], $_POST['gender'])) {
-        $fname = $_POST['fname'];
-        $lname = $_POST['lname'];
-        $email = $_POST['email'];
-        $phone = $_POST['phone'];
-        $address = $_POST['address'];
-        $gender = $_POST['gender'];
 
-        $newData = [
-            'first_name' => $fname,
-            'last_name' => $lname,
-            'email' => $email,
-            'phone' => $phone,
-            'address' => $address,
-            'gender' => $gender
-        ];
 
-        try {
-            $fileJson = file_get_contents(DATABASE);
-            $data = json_decode($fileJson, true);
 
-            if (!is_array($data)) {
-                $data = [];
-            }
-
-            $data['members'][] = $newData;
-
-            file_put_contents(DATABASE, json_encode($data, JSON_PRETTY_PRINT));
-            header('Location: ../master_anggota.php');
-        } catch (Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-        }
-    }
-}
-
-function transactionsHandler()
-{
-    $book = $_POST['book'];
-    $member = $_POST['member'];
-    $date = $_POST['date'];
-
-    $transaction_id = uniqid();
-
-    $newData = [
-        'transaction_id' => $transaction_id,
-        'book' => $book,
-        'member' => $member,
-        'date' => $date
-    ];
-
-    try {
-        $fileJson = file_get_contents(DATABASE);
-        $data = json_decode($fileJson, true);
-
-        if (!is_array($data)) {
-            $data = [];
-        }
-
-        $data['transactions'][] = $newData;
-
-        file_put_contents(DATABASE, json_encode($data, JSON_PRETTY_PRINT));
-        header('Location: ../transaksi.php');
-    } catch (Exception $e) {
-        echo 'Caught exception: ',  $e->getMessage(), "\n";
-    }
-}

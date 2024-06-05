@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (isset($_POST['fname'])) {
         membersHandler();
     } elseif (isset($_POST['transaction_id'])) {
-        transactionsHandler($_POST['transaction_id']);        
+        transactionsHandler($_POST['transaction_id']);
     }
 }
 

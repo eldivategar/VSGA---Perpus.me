@@ -1,3 +1,7 @@
+<?php
+include 'database/connection.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +33,7 @@
 
 
     <!-- Header-->
-    <header class="pt-5" style="background-color: #00215E;">
+    <header style="background-color: #00215E; padding-top: 4.7rem;">
         <div class="container px-5">
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-6">
@@ -55,36 +59,41 @@
     <!-- List Books Section -->
     <section class="m-4">
         <h2 class="text-center pb-3">List Buku <span style="color: #FF6C22;">Perpus.me</span></h2>
+        
         <div class="row">
             <?php
-            $fileJson = file_get_contents('database/perpus.me.json');
-            $data = json_decode($fileJson, true);
-            $books = $data['books'];
-
-            if (is_array($books)) {
-                foreach ($books as $book => $value) {
+            $q1 = "SELECT * FROM books";
+            $result = mysqli_query($conn, $q1);
+            if ($result) {
+                if ($result->num_rows > 0) {
+                    while ($value = $result->fetch_assoc()) {
             ?>
-                    <div class="col-sm-6 col-md-4 p-2">
-                        <div class="card mb-3">
-                            <div class="row g-0">
-                                <div class="col-md-6">
-                                    <img src="assets/img/<?= $value['image'] ?>" class="img-fluid rounded-start" alt="...">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= $value['bookTitle'] ?></h5>
-                                        <p class="card-text"><?= substr($value['description'], 0, 25) ?>...</p>
-                                        <p class="card-text"><small class="text-muted">Author: <?= $value['author'] ?></small></p>
+                        <div class="col-sm-6 col-md-4 p-2">
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-6">
+                                        <img src="assets/img/<?= $value['image'] ?>" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?= $value['book_title'] ?></h5>
+                                            <p class="card-text"><?= substr($value['description'], 0, 25) ?>...</p>
+                                            <p class="card-text"><small class="text-muted">Author: <?= $value['author'] ?></small></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
             <?php
+                    }
                 }
+            } else {
+                echo "<p class='fs-5 text-center'>Data tidak ditemukan</p>";
             }
             ?>
+
         </div>
+        
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
