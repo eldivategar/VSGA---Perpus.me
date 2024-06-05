@@ -100,7 +100,7 @@
                     <table class="table table-hover">
                         <?php
                         include '../database/connection.php';
-                        $query = "SELECT * FROM members";
+                        $query = "SELECT * FROM members ORDER BY member_id DESC";
                         $result = mysqli_query($conn, $query);
 
                         if (mysqli_num_rows($result) > 0) {

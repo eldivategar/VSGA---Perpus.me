@@ -91,7 +91,7 @@
                     <table class="table table-hover">
                         <?php
                         include '../database/connection.php';
-                        $query = "SELECT * FROM books";
+                        $query = "SELECT * FROM books ORDER BY created_at DESC";
                         $result = mysqli_query($conn, $query);
 
                         if (mysqli_num_rows($result) > 0) {

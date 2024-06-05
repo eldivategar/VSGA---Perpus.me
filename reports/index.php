@@ -40,7 +40,7 @@ include '../database/connection.php';
         <div class="text-end">
             <button type="submit" class="btn btn-labeled btn-outline-success" onclick="window.location='export.php'">
                 <span class="btn-label"><i class="fa fa-print"></i></span>
-                 | Cetak
+                 Cetak
             </button>
         </div>
 
@@ -58,7 +58,7 @@ include '../database/connection.php';
                         $q2 = "SELECT * FROM members";
                         $members = mysqli_query($conn, $q2);
 
-                        $q3 = "SELECT * FROM transactions";
+                        $q3 = "SELECT * FROM transactions ORDER BY created_at DESC";
                         $transactions = mysqli_query($conn, $q3);
 
                         if (mysqli_num_rows($transactions) > 0) {
@@ -68,7 +68,7 @@ include '../database/connection.php';
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Kode Buku</th>
+                                    <th scope="col">Nama Buku</th>
                                     <th scope="col">Nama Anggota</th>
                                     <th scope="col">Email Anggota</th>
                                     <th scope="col">Tanggal Pinjam</th>
@@ -85,7 +85,7 @@ include '../database/connection.php';
                                 ?>
                                     <?php foreach ($books as $book => $bvalue) {
                                         if ($tvalue['book_id'] == $bvalue['book_id']) {
-                                            $bookCode = $bvalue['book_code'];
+                                            $bookCode = $bvalue['book_title'];
                                         }
                                     } ?>
 

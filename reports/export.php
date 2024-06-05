@@ -21,6 +21,7 @@ try {
             books ON transactions.book_id = books.book_id 
         INNER JOIN 
             members ON transactions.member_id = members.member_id
+        ORDER BY transactions.created_at DESC
     ";
 
     $result = mysqli_query($conn, $query);

@@ -79,7 +79,7 @@ include '../database/connection.php';
                                     <select class="form-select" aria-label="Default select example" name="member" id="member" required>
                                         <option value="" disabled selected>Pilih Anggota</option>
                                         <?php
-                                        $q2 = "SELECT * FROM members";
+                                        $q2 = "SELECT * FROM members ORDER BY first_name ASC";
                                         $members = mysqli_query($conn, $q2);
 
                                         if (mysqli_num_rows($members) > 0) {
@@ -121,7 +121,7 @@ include '../database/connection.php';
                     <table class="table table-hover">
                         <?php
 
-                        $q3 = "SELECT * FROM transactions";
+                        $q3 = "SELECT * FROM transactions ORDER BY created_at DESC";
                         $transactions = mysqli_query($conn, $q3);
 
                         if (mysqli_num_rows($transactions) > 0) {

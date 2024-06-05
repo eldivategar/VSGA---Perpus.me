@@ -62,7 +62,7 @@ include 'database/connection.php';
         
         <div class="row">
             <?php
-            $q1 = "SELECT * FROM books";
+            $q1 = "SELECT * FROM books ORDER BY created_at DESC";
             $result = mysqli_query($conn, $q1);
             if ($result) {
                 if ($result->num_rows > 0) {
